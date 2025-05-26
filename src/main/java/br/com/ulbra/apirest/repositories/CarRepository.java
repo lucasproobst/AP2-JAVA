@@ -35,6 +35,18 @@ public class CarRepository {
         return car;
     }
 
+    public Car updateCar(int id, Car car) {
+        Car existingCar = getCar(id);
+        if (existingCar != null) {
+            existingCar.setMarca(car.getMarca());
+            existingCar.setModelo(car.getModelo());
+            existingCar.setAno(car.getAno());
+            return existingCar;
+        } else {
+            return null;
+        }
+    }
+
     public void deleteCar(int id) {
         Car car = lista
                 .stream()

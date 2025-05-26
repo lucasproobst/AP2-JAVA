@@ -1,4 +1,3 @@
-
 package br.com.ulbra.apirest.controllers;
 
 import br.com.ulbra.apirest.models.Car;
@@ -35,6 +34,12 @@ public class CarController {
                 .buildAndExpand(car.getId()).toUri();
 
         return ResponseEntity.created(uri).body(this.carService.createCar(car));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Car> updateCar(@PathVariable int id, @RequestBody Car car) {
+        Car updatedCar = this.carService.updateCar(id, car);
+        return ResponseEntity.ok(updatedCar);
     }
 
     @DeleteMapping("/{id}")

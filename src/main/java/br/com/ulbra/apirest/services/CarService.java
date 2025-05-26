@@ -27,6 +27,19 @@ public class CarService {
         return this.carRepository.createCar(car);
     }
 
+    public Car updateCar(int id, Car car) {
+        Car existingCar = this.carRepository.getCar(id);
+        if (existingCar == null) {
+            throw new RuntimeException("Car not found with id " + id);
+        }
+
+        existingCar.setMarca(car.getMarca());
+        existingCar.setModelo(car.getModelo());
+        existingCar.setAno(car.getAno());
+
+        return this.carRepository.updateCar(id, existingCar);
+    }
+
     public void deleteCar(int id) {
         this.carRepository.deleteCar(id);
     }
