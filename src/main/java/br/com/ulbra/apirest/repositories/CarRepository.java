@@ -1,4 +1,3 @@
-
 package br.com.ulbra.apirest.repositories;
 
 import br.com.ulbra.apirest.models.Car;
@@ -43,5 +42,21 @@ public class CarRepository {
                 .orElseThrow();
 
         lista.remove(car);
+    }
+
+    public Car updateCar(int id, Car car) {
+        Car existingCar = lista
+                .stream()
+                .filter(item -> Objects.equals(item.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Car not found with id " + id));
+
+        existingCar.setBrand(car.getBrand());
+        existingCar.setModel(car.getModel());
+        existingCar.setYear(car.getYear());
+        existingCar.setColor(car.getColor());
+        existingCar.setPrice(car.getPrice());
+
+        return existingCar;
     }
 }

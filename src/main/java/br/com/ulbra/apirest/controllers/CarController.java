@@ -1,49 +1,47 @@
-
-package br.com.ulbra.apirest.controllers;
+package br.com.ulbra.apirest.services;
 
 import br.com.ulbra.apirest.models.Car;
 import br.com.ulbra.apirest.repositories.CarRepository;
-import br.com.ulbra.apirest.services.CarService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.List;
 
-@RestController
-@RequestMapping("/cars")
-public class CarController {
-    private final CarRepository carRepository;
-    private CarService carService;
+@Service
+public class CarService {
+    private CarRepository carRepository;
 
-    public CarController(CarService carService, CarRepository carRepository) {
-        this.carService = carService;
+    public CarService(CarRepository carRepository) {
         this.carRepository = carRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Car>> getCars() {
-        return ResponseEntity.ok(this.carService.getCars());
+    public Car getCar(int id) {
+        return this.carRepository.getCar(id);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Car> getCar(@PathVariable int id) {
-        return ResponseEntity.ok(this.carService.getCar(id));
+    public List<Car> getCars() {
+        return this.carRepository.getCars();
     }
 
-    @PostMapping
-    public ResponseEntity<Car> createCar(@RequestBody Car car) {
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(car.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(this.carService.createCar(car));
+    public Car createCar(Car car) {
+        return this.carRepository.createCar(car);
     }
 
+    public void deleteCar(int id) {
+        this.carRepository.deleteCar(id);
+    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCar(@PathVariable int id) {
-        this.carService.deleteCar(id);
-        return ResponseEntity.noContent().build();
+    public Car updateCar(int id, Car car) {
+        Car existingCar = this.carRepository.getCar(id);
+        if (existingCar == null) {
+            throw new RuntimeException("Car not found with id " + id);
+        }
+
+        existingCar.setBrand(car.getBrand());
+        existingCar.setModel(car.getModel());
+        existingCar.setYear(car.getYear());
+        existingCar.setColor(car.getColor());
+        existingCar.setPrice(car.getPrice());
+
+        return this.carRepository.updateCar(id, existingCar);
     }
 }
